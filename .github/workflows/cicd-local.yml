@@ -1,0 +1,26 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name : Checkout code
+        uses: actions/checkout@v4
+
+      # Build and Deploy
+      - name: Build and Deploy dockers images locally
+        run: |
+          docker-compose up
+
+      
