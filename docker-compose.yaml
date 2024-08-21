@@ -1,0 +1,28 @@
+version: '3.8'  # Use an appropriate version for your Docker Compose setup
+
+services:
+  liability:
+    build:
+      context: ./liability
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"  # Map container port 8080 to host port 8080
+    depends_on:
+      - mongodb  # Ensure MongoDB starts before the liability service
+
+  axonserver:
+    image: axoniq/axonserver:latest  # Use the appropriate Axon Server image
+    ports:
+      - "8024:8024"  # Management and HTTP API port
+      - "8124:8124"  # Event store port
+      - "8224:8224"  # Cluster server port
+
+  mongodb:
+    image: mongo:latest  # Use the official MongoDB image
+    ports:
+      - "27017:27017"  # Expose MongoDB port to the host
+    volumes:
+      - mongo-data:/data/db  # Persist MongoDB data
+
+volumes:
+  mongo-data:
