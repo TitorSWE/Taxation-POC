@@ -18,13 +18,6 @@ jobs:
       - name : Checkout code
         uses: actions/checkout@v4
 
-      # Install Docker Compose (using Docker's official script)
-      - name: Install Docker Compose
-        run: |
-          docker compose version || curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version  # Check the installation
-
       # Build and Deploy
       - name: Build and Deploy dockers images locally
         run: |
