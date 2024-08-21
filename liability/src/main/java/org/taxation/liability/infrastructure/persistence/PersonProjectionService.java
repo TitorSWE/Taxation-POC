@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.taxation.liability.model.events.LiabilityCreated;
 import org.taxation.liability.model.events.LiabilityTypeDefined;
 import org.taxation.liability.model.events.PersonDeclared;
+import org.taxation.tools.Persistence.IRepository;
 
 import java.util.List;
 

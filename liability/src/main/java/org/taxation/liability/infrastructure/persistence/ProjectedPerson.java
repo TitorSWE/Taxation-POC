@@ -2,6 +2,7 @@ package org.taxation.liability.infrastructure.persistence;
 
 import org.taxation.liability.model.valueObjects.SocialSecurityNumber;
 import org.taxation.liability.model.valueObjects.Year;
+import org.taxation.tools.Persistence.ProjectedEntity;
 
 public class ProjectedPerson implements ProjectedEntity {
 
