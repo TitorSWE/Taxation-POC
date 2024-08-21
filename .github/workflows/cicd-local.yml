@@ -21,6 +21,6 @@ jobs:
       # Build and Deploy
       - name: Build and Deploy dockers images locally
         run: |
-          docker-compose up
+           docker-compose -f ../docker-compose.yaml up
 
       
