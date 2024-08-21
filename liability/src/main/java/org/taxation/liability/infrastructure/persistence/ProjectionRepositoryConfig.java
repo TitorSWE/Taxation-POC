@@ -7,15 +7,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
-public class ProjectionRepositoryConfig {
+public class ProjectionRepositoryConfig<T extends ProjectedEntity> {
 
     @Value("${projection.repository.type}")
     private String repositoryType;
 
     @Bean
     @Primary
-    public PersonProjectionRepositoryFactory personProjectionRepositoryFactory(
-            InMemoryPersonProjectionRepositoryFactory inMemoryFactory) {
+    public IRepositoryFactory<T> personProjectionRepositoryFactory(
+            InMemoryRepositoryFactory<T> inMemoryFactory) {
         switch (repositoryType.toLowerCase()) {
             case "in-memory":
                 return inMemoryFactory;
@@ -26,7 +26,7 @@ public class ProjectionRepositoryConfig {
 
     @Bean
     @Primary
-    public PersonProjectionRepository personProjectionRepository(PersonProjectionRepositoryFactory factory) {
+    public IRepository<T> personProjectionRepository(IRepositoryFactory<T> factory) {
         return factory.createRepository();
     }
 }

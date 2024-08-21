@@ -3,19 +3,21 @@ package org.taxation.liability.infrastructure.persistence;
 import org.taxation.liability.model.valueObjects.Type;
 import org.taxation.liability.model.valueObjects.Year;
 
-public class LiabilityProjection {
+public class ProjectedLiability implements ProjectedEntity{
 
-    private String liabilityId;
+    private String id;
     private String personId;
     private Year year;
     private Type type;
 
-    public String getLiabilityId() {
-        return liabilityId;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setLiabilityId(String liabilityId) {
-        this.liabilityId = liabilityId;
+    @Override
+    public void setId(String liabilityId) {
+        this.id = liabilityId;
     }
 
     public String getPersonId() {

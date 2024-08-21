@@ -4,7 +4,6 @@ import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.taxation.liability.model.Liability;
 import org.taxation.liability.model.events.LiabilityCreated;
 import org.taxation.liability.model.events.LiabilityTypeDefined;
 import org.taxation.liability.model.events.PersonDeclared;
@@ -14,28 +13,28 @@ import java.util.List;
 @Service
 public class PersonProjectionService {
 
-    private final PersonProjectionRepository repository;
+    private final IRepository<ProjectedPerson> repository;
 
     @Autowired
-    public PersonProjectionService(PersonProjectionRepository repository) {
+    public PersonProjectionService(IRepository<ProjectedPerson> repository) {
         this.repository = repository;
     }
 
     @QueryHandler
-    public List<PersonProjection> handle(FindAllPersonsQuery query){
+    public List<ProjectedPerson> handle(FindAllPersonsQuery query){
         return repository.findAll();
     }
 
     @QueryHandler
-    public PersonProjection handle(FindPersonQuery query){
+    public ProjectedPerson handle(FindPersonQuery query){
         return repository.findById(query.getPersonId());
     }
 
 
     @EventHandler
     public void on(PersonDeclared event) {
-        PersonProjection projection = new PersonProjection();
-        projection.setPersonId(event.getPersonId());
+        ProjectedPerson projection = new ProjectedPerson();
+        projection.setId(event.getPersonId());
         projection.setArrivalYear(event.getArrivalYear());
         projection.setSocialSecurityNumber(event.getSocialSecurityNumber());
         repository.save(projection);
@@ -44,13 +43,13 @@ public class PersonProjectionService {
     @EventHandler
     public void on(LiabilityCreated event) {
         String personId = event.getPersonId();
-        PersonProjection personProjection = repository.findById(personId);
-        LiabilityProjection liabilityProjection = new LiabilityProjection();
-        liabilityProjection.setLiabilityId(event.getLiabilityId());
-        liabilityProjection.setYear(event.getYear());
-        liabilityProjection.setPersonId(event.getPersonId());
-        personProjection.setLiability(liabilityProjection);
-        repository.save(personProjection);
+        ProjectedPerson projectedPerson = repository.findById(personId);
+        ProjectedLiability projectedLiability = new ProjectedLiability();
+        projectedLiability.setId(event.getLiabilityId());
+        projectedLiability.setYear(event.getYear());
+        projectedLiability.setPersonId(event.getPersonId());
+        projectedPerson.setLiability(projectedLiability);
+        repository.save(projectedPerson);
 
     }
 
@@ -61,10 +60,10 @@ public class PersonProjectionService {
     @EventHandler
     public void on(LiabilityTypeDefined event) {
         String personId = event.getPersonId();
-        PersonProjection personProjection = repository.findById(personId);
-        LiabilityProjection updatedLiability = personProjection.getLiability();
+        ProjectedPerson projectedPerson = repository.findById(personId);
+        ProjectedLiability updatedLiability = projectedPerson.getLiability();
         updatedLiability.setType(event.getType());
-        personProjection.setLiability(updatedLiability);
-        repository.save(personProjection);
+        projectedPerson.setLiability(updatedLiability);
+        repository.save(projectedPerson);
     }
 }

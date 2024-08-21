@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.taxation.liability.infrastructure.persistence.FindAllPersonsQuery;
 import org.taxation.liability.infrastructure.persistence.FindPersonQuery;
-import org.taxation.liability.infrastructure.persistence.PersonProjection;
+import org.taxation.liability.infrastructure.persistence.ProjectedPerson;
 import org.taxation.liability.infrastructure.resources.request.DeclarePersonRequest;
 import org.taxation.liability.infrastructure.resources.request.SetLiabilityRequest;
 import org.taxation.liability.infrastructure.resources.response.DeclarePersonResponse;
@@ -93,12 +93,12 @@ public class LiabilityRestEndpoint {
     }
 
     @GetMapping("/persons")
-    public CompletableFuture<List<PersonProjection>> findAllPersons(){
-        return queryGateway.query(new FindAllPersonsQuery(), ResponseTypes.multipleInstancesOf(PersonProjection.class));
+    public CompletableFuture<List<ProjectedPerson>> findAllPersons(){
+        return queryGateway.query(new FindAllPersonsQuery(), ResponseTypes.multipleInstancesOf(ProjectedPerson.class));
     }
 
     @GetMapping("/{personId}")
-    public CompletableFuture<Optional<PersonProjection>> findPerson(@PathVariable("personId") String personId){
-        return queryGateway.query(new FindPersonQuery(personId), ResponseTypes.optionalInstanceOf(PersonProjection.class));
+    public CompletableFuture<Optional<ProjectedPerson>> findPerson(@PathVariable("personId") String personId){
+        return queryGateway.query(new FindPersonQuery(personId), ResponseTypes.optionalInstanceOf(ProjectedPerson.class));
     }
 }

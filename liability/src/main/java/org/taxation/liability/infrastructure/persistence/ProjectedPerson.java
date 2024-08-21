@@ -1,24 +1,25 @@
 package org.taxation.liability.infrastructure.persistence;
 
-import org.taxation.liability.model.Liability;
 import org.taxation.liability.model.valueObjects.SocialSecurityNumber;
 import org.taxation.liability.model.valueObjects.Year;
 
-public class PersonProjection {
+public class ProjectedPerson implements ProjectedEntity {
 
-    private String personId;
+    private String id;
     private SocialSecurityNumber socialSecurityNumber;
     private Year arrivalYear;
-    private LiabilityProjection liabilityProjection;
+    private ProjectedLiability projectedLiability;
 
-    public PersonProjection() {}
+    public ProjectedPerson() {}
 
-    public String getPersonId() {
-        return personId;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setPersonId(String personId) {
-        this.personId = personId;
+    @Override
+    public void setId(String personId) {
+        this.id = personId;
     }
 
     public SocialSecurityNumber getSocialSecurityNumber() {
@@ -37,11 +38,11 @@ public class PersonProjection {
         this.arrivalYear = arrivalYear;
     }
 
-    public LiabilityProjection getLiability() {
-        return liabilityProjection;
+    public ProjectedLiability getLiability() {
+        return projectedLiability;
     }
 
-    public void setLiability(LiabilityProjection liability) {
-        this.liabilityProjection = liability;
+    public void setLiability(ProjectedLiability liability) {
+        this.projectedLiability = liability;
     }
 }
