@@ -1,5 +1,4 @@
-package org.taxation.liability.infrastructure.persistence;
-
+package org.taxation.tools.Persistence;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +13,7 @@ public class ProjectionRepositoryConfig<T extends ProjectedEntity> {
 
     @Bean
     @Primary
-    public IRepositoryFactory<T> projectionRepositoryFactory(
+    public IRepositoryFactory<T> personProjectionRepositoryFactory(
             InMemoryRepositoryFactory<T> inMemoryFactory) {
         switch (repositoryType.toLowerCase()) {
             case "in-memory":
@@ -26,7 +25,7 @@ public class ProjectionRepositoryConfig<T extends ProjectedEntity> {
 
     @Bean
     @Primary
-    public IRepository<T> projectionRepository(IRepositoryFactory<T> factory) {
+    public IRepository<T> personProjectionRepository(IRepositoryFactory<T> factory) {
         return factory.createRepository();
     }
 }

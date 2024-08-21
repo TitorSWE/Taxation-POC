@@ -3,7 +3,6 @@ package org.taxation.liability.infrastructure;
 import org.axonframework.config.EventProcessingConfigurer;
 import org.axonframework.eventhandling.tokenstore.TokenStore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
