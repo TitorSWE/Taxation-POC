@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>liability</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -133,6 +133,11 @@
             <version>3.3.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.taxation</groupId>
+            <artifactId>toolbox</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
 
     </dependencies>

@@ -1,0 +1,198 @@
+{
+  "context": {
+    "groupId": "ch.imposition",
+    "artifactId": "taxation",
+    "artifactVersion": "1.0.0",
+    "packageName": "ch.imposition.taxation"
+  },
+  "model": {
+    "persistenceSettings": {
+      "storageType": "JOURNAL",
+      "useCQRS": true,
+      "projections": "EVENT_BASED",
+      "database": "IN_MEMORY",
+      "commandModelDatabase": "POSTGRES",
+      "queryModelDatabase": "POSTGRES"
+    },
+    "aggregateSettings": [
+      {
+        "api": {
+          "rootPath": "/taxation",
+          "routes": [
+            {
+              "path": "*",
+              "httpMethod": "POST",
+              "aggregateMethod": "CreerTaxation",
+              "requireEntityLoad": false
+            },
+            {
+              "path": "/{id}/calculer",
+              "httpMethod": "PATCH",
+              "aggregateMethod": "CalculerTaxation",
+              "requireEntityLoad": true
+            }
+          ]
+        },
+        "aggregateName": "Taxation",
+        "stateFields": [
+          {
+            "name": "id",
+            "type": "String"
+          },
+          {
+            "name": "idCreance",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "idPersonne",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "revenus",
+            "type": "double",
+            "collectionType": ""
+          },
+          {
+            "name": "taxes",
+            "type": "double",
+            "collectionType": ""
+          }
+        ],
+        "methods": [
+          {
+            "name": "CreerTaxation",
+            "parameters": [
+              {
+                "stateField": "idCreance",
+                "parameterName": "idCreance",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "idPersonne",
+                "parameterName": "idPersonne",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": true,
+            "event": "TaxationCree"
+          },
+          {
+            "name": "CalculerTaxation",
+            "parameters": [
+              {
+                "stateField": "id",
+                "parameterName": "id",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "revenus",
+                "parameterName": "revenus",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": false,
+            "event": "TaxationCalculee"
+          }
+        ],
+        "events": [
+          {
+            "name": "TaxationCree",
+            "fields": [
+              "id",
+              "idCreance",
+              "idPersonne"
+            ]
+          },
+          {
+            "name": "TaxationCalculee",
+            "fields": [
+              "id",
+              "idCreance",
+              "revenus",
+              "taxes"
+            ]
+          }
+        ],
+        "consumerExchange": {
+          "receivers": [
+            {
+              "schema": "Imposition:perception:ch.impoisition.perception:CreanceCree:1.0.0",
+              "aggregateMethod": "CreerTaxation"
+            }
+          ]
+        },
+        "producerExchange": {
+          "schemaGroup": "Imposition:taxation:ch.imposition.taxation",
+          "outgoingEvents": [
+            "TaxationCree",
+            "TaxationCalculee"
+          ]
+        }
+      }
+    ],
+    "valueObjectSettings": [
+      {
+        "name": "NomComplet",
+        "fields": [
+          {
+            "name": "prenom",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "nom",
+            "type": "String",
+            "collectionType": ""
+          }
+        ]
+      },
+      {
+        "name": "Adresse",
+        "fields": [
+          {
+            "name": "Rue",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "Numero",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "Ville",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "CodePostal",
+            "type": "int",
+            "collectionType": ""
+          }
+        ]
+      }
+    ]
+  },
+  "deployment": {
+    "type": "NONE",
+    "dockerImage": "",
+    "kubernetesImage": "",
+    "kubernetesPod": "",
+    "clusterTotalNodes": 3,
+    "clusterPort": 50011,
+    "producerExchangePort": 19764,
+    "httpServerPort": 8083,
+    "pullSchemas": false
+  },
+  "schemata": {
+    "host": "localhost",
+    "port": 9019
+  },
+  "projectDirectory": "/designer/VLINGO-XOOM/ch.imposition/taxation1",
+  "useAnnotations": true,
+  "useAutoDispatch": true,
+  "generateUIWith": "ReactJS",
+  "generateUI": true
+}

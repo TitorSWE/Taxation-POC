@@ -1,0 +1,284 @@
+{
+  "context": {
+    "groupId": "ch.imposition",
+    "artifactId": "assujettissement",
+    "artifactVersion": "1.0.0",
+    "packageName": "ch.imposition.assujettissement"
+  },
+  "model": {
+    "persistenceSettings": {
+      "storageType": "JOURNAL",
+      "useCQRS": true,
+      "projections": "EVENT_BASED",
+      "database": "IN_MEMORY",
+      "commandModelDatabase": "POSTGRES",
+      "queryModelDatabase": "POSTGRES"
+    },
+    "aggregateSettings": [
+      {
+        "api": {
+          "rootPath": "/personne",
+          "routes": [
+            {
+              "path": "*",
+              "httpMethod": "POST",
+              "aggregateMethod": "DeclarerPersonne",
+              "requireEntityLoad": false
+            }
+          ]
+        },
+        "aggregateName": "Personne",
+        "stateFields": [
+          {
+            "name": "id",
+            "type": "String"
+          },
+          {
+            "name": "AVS",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "nomComplet",
+            "type": "NomComplet",
+            "collectionType": ""
+          },
+          {
+            "name": "adresse",
+            "type": "Adresse",
+            "collectionType": ""
+          },
+          {
+            "name": "anneeArrivee",
+            "type": "int",
+            "collectionType": ""
+          }
+        ],
+        "methods": [
+          {
+            "name": "DeclarerPersonne",
+            "parameters": [
+              {
+                "stateField": "AVS",
+                "parameterName": "AVS",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "nomComplet",
+                "parameterName": "nomComplet",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "adresse",
+                "parameterName": "adresse",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "anneeArrivee",
+                "parameterName": "anneeArrivee",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": true,
+            "event": "PersonneDeclaree"
+          }
+        ],
+        "events": [
+          {
+            "name": "PersonneDeclaree",
+            "fields": [
+              "id",
+              "AVS",
+              "nomComplet",
+              "adresse",
+              "anneeArrivee"
+            ]
+          }
+        ],
+        "consumerExchange": {
+          "receivers": []
+        },
+        "producerExchange": {
+          "schemaGroup": "Imposition:assujettissement:ch.imposition.assujettissement",
+          "outgoingEvents": [
+            "PersonneDeclaree"
+          ]
+        }
+      },
+      {
+        "api": {
+          "rootPath": "/assujettissement",
+          "routes": [
+            {
+              "path": "*",
+              "httpMethod": "POST",
+              "aggregateMethod": "CreerAssujettissement",
+              "requireEntityLoad": false
+            },
+            {
+              "path": "/{id}/determiner",
+              "httpMethod": "PATCH",
+              "aggregateMethod": "DeterminerAssujettissement",
+              "requireEntityLoad": true
+            }
+          ]
+        },
+        "aggregateName": "Assujettissement",
+        "stateFields": [
+          {
+            "name": "id",
+            "type": "String"
+          },
+          {
+            "name": "idPersonne",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "annee",
+            "type": "int",
+            "collectionType": ""
+          },
+          {
+            "name": "typeImpots",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "isValide",
+            "type": "boolean",
+            "collectionType": ""
+          }
+        ],
+        "methods": [
+          {
+            "name": "CreerAssujettissement",
+            "parameters": [
+              {
+                "stateField": "idPersonne",
+                "parameterName": "idPersonne",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "annee",
+                "parameterName": "annee",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": true,
+            "event": "AssujettissementCree"
+          },
+          {
+            "name": "DeterminerAssujettissement",
+            "parameters": [
+              {
+                "stateField": "id",
+                "parameterName": "id",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "typeImpots",
+                "parameterName": "typeImpots",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": false,
+            "event": "AssujettissementValide"
+          }
+        ],
+        "events": [
+          {
+            "name": "AssujettissementCree",
+            "fields": [
+              "id",
+              "idPersonne",
+              "annee"
+            ]
+          },
+          {
+            "name": "AssujettissementValide",
+            "fields": [
+              "id",
+              "idPersonne",
+              "annee",
+              "typeImpots",
+              "isValide"
+            ]
+          }
+        ],
+        "consumerExchange": {
+          "receivers": []
+        },
+        "producerExchange": {
+          "schemaGroup": "Imposition:assujettissement:ch.imposition.assujettissement",
+          "outgoingEvents": [
+            "AssujettissementCree",
+            "AssujettissementValide"
+          ]
+        }
+      }
+    ],
+    "valueObjectSettings": [
+      {
+        "name": "NomComplet",
+        "fields": [
+          {
+            "name": "prenom",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "nom",
+            "type": "String",
+            "collectionType": ""
+          }
+        ]
+      },
+      {
+        "name": "Adresse",
+        "fields": [
+          {
+            "name": "Rue",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "Numero",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "Ville",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "CodePostal",
+            "type": "int",
+            "collectionType": ""
+          }
+        ]
+      }
+    ]
+  },
+  "deployment": {
+    "type": "NONE",
+    "dockerImage": "",
+    "kubernetesImage": "",
+    "kubernetesPod": "",
+    "clusterTotalNodes": 3,
+    "clusterPort": 50011,
+    "producerExchangePort": 19762,
+    "httpServerPort": 8081,
+    "pullSchemas": false
+  },
+  "schemata": {
+    "host": "localhost",
+    "port": 9019
+  },
+  "projectDirectory": "/designer/VLINGO-XOOM/ch.imposition/assujettissement1",
+  "useAnnotations": true,
+  "useAutoDispatch": true,
+  "generateUIWith": "ReactJS",
+  "generateUI": true
+}

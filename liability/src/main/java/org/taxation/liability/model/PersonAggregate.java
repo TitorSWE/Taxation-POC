@@ -23,13 +23,13 @@ public class PersonAggregate {
 
     @CommandHandler
     public PersonAggregate(DeclarePerson command){
-        apply(new PersonDeclared(command.getPersonId(), command.getArrivalYear(), command.getSocialSecurityNumber()));
-        apply(new LiabilityCreated(command.getLiabilityId(), command.getPersonId(), command.getArrivalYear()));
+        apply(new PersonDeclared(command.getPersonId(), command.getArrivalYear(), command.getSocialSecurityNumber()))
+                .andThenApply(() -> new LiabilityCreated(command.getLiabilityId(), command.getPersonId(), command.getArrivalYear()));
     }
 
     @CommandHandler
     public void handle(SetLiabilityType command){
-        apply(new LiabilityTypeDefined(command.getPersonId(), this.getState().getLiability().getLiabilityId(), command.getType()));
+        apply(new LiabilityTypeDefined(command.getPersonId(), this.getState().getLiability().getLiabilityId(), command.getType(), this.state.getArrivalYear()));
     }
 
     @EventSourcingHandler
@@ -45,7 +45,7 @@ public class PersonAggregate {
 
     @EventSourcingHandler
     public void on(LiabilityTypeDefined event){
-        state = state.defineLiabilityType(event.getPersonId(), event.getType());
+        state = state.defineLiabilityType(event.getPersonId(), event.getLiabilityType());
     }
 
     public String getPersonId() {

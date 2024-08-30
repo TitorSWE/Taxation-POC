@@ -1,0 +1,228 @@
+{
+  "context": {
+    "groupId": "ch.imposition",
+    "artifactId": "repartition",
+    "artifactVersion": "1.0.0",
+    "packageName": "ch.imposition.repartition"
+  },
+  "model": {
+    "persistenceSettings": {
+      "storageType": "JOURNAL",
+      "useCQRS": true,
+      "projections": "EVENT_BASED",
+      "database": "IN_MEMORY",
+      "commandModelDatabase": "POSTGRES",
+      "queryModelDatabase": "POSTGRES"
+    },
+    "aggregateSettings": [
+      {
+        "api": {
+          "rootPath": "/repartition",
+          "routes": [
+            {
+              "path": "*",
+              "httpMethod": "POST",
+              "aggregateMethod": "CreerRepartition",
+              "requireEntityLoad": false
+            },
+            {
+              "path": "/{id}/repartir",
+              "httpMethod": "PATCH",
+              "aggregateMethod": "RepartirImpotsPercus",
+              "requireEntityLoad": true
+            }
+          ]
+        },
+        "aggregateName": "Repartition",
+        "stateFields": [
+          {
+            "name": "id",
+            "type": "String"
+          },
+          {
+            "name": "sommeImpotsProduits",
+            "type": "double",
+            "collectionType": ""
+          },
+          {
+            "name": "sommeImpotsPercus",
+            "type": "double",
+            "collectionType": ""
+          },
+          {
+            "name": "impot",
+            "type": "Impot",
+            "collectionType": ""
+          },
+          {
+            "name": "sommeImpotPercusNonRepartis",
+            "type": "double",
+            "collectionType": ""
+          },
+          {
+            "name": "sommeImpotsPercusRepartis",
+            "type": "double",
+            "collectionType": ""
+          },
+          {
+            "name": "annee",
+            "type": "int",
+            "collectionType": ""
+          }
+        ],
+        "methods": [
+          {
+            "name": "CreerRepartition",
+            "parameters": [
+              {
+                "stateField": "annee",
+                "parameterName": "annee",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": true,
+            "event": "RepartitionCree"
+          },
+          {
+            "name": "AjouterImpotPercu",
+            "parameters": [
+              {
+                "stateField": "id",
+                "parameterName": "id",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "impot",
+                "parameterName": "impot",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": false,
+            "event": "ImpotPercuAjoute"
+          },
+          {
+            "name": "AjouterImpotProduit",
+            "parameters": [
+              {
+                "stateField": "id",
+                "parameterName": "id",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "impot",
+                "parameterName": "impot",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": false,
+            "event": "ImpotProduitAjoute"
+          },
+          {
+            "name": "RepartirImpotsPercus",
+            "parameters": [
+              {
+                "stateField": "id",
+                "parameterName": "id",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": false,
+            "event": "ImpotsPercusRepartis"
+          }
+        ],
+        "events": [
+          {
+            "name": "RepartitionCree",
+            "fields": [
+              "id",
+              "annee"
+            ]
+          },
+          {
+            "name": "ImpotPercuAjoute",
+            "fields": [
+              "id",
+              "sommeImpotsPercus",
+              "impot",
+              "sommeImpotPercusNonRepartis"
+            ]
+          },
+          {
+            "name": "ImpotProduitAjoute",
+            "fields": [
+              "id",
+              "sommeImpotsProduits",
+              "impot"
+            ]
+          },
+          {
+            "name": "ImpotsPercusRepartis",
+            "fields": [
+              "id",
+              "sommeImpotPercusNonRepartis",
+              "sommeImpotsPercusRepartis"
+            ]
+          }
+        ],
+        "consumerExchange": {
+          "receivers": [
+            {
+              "schema": "Imposition:perception:ch.impoisition.perception:CompteCredite:3.0.1",
+              "aggregateMethod": "AjouterImpotPercu"
+            },
+            {
+              "schema": "Imposition:perception:ch.impoisition.perception:CreanceEmise:1.0.0",
+              "aggregateMethod": "AjouterImpotProduit"
+            }
+          ]
+        },
+        "producerExchange": {
+          "schemaGroup": "Imposition:repartition:ch.imposition.repartition",
+          "outgoingEvents": [
+            "RepartitionCree",
+            "ImpotPercuAjoute",
+            "ImpotProduitAjoute",
+            "ImpotsPercusRepartis"
+          ]
+        }
+      }
+    ],
+    "valueObjectSettings": [
+      {
+        "name": "Impot",
+        "fields": [
+          {
+            "name": "idCreance",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "montant",
+            "type": "double",
+            "collectionType": ""
+          }
+        ]
+      }
+    ]
+  },
+  "deployment": {
+    "type": "NONE",
+    "dockerImage": "",
+    "kubernetesImage": "",
+    "kubernetesPod": "",
+    "clusterTotalNodes": 3,
+    "clusterPort": 50011,
+    "producerExchangePort": 19764,
+    "httpServerPort": 8084,
+    "pullSchemas": false
+  },
+  "schemata": {
+    "host": "localhost",
+    "port": 9019
+  },
+  "projectDirectory": "/designer/VLINGO-XOOM/ch.imposition/repartition1",
+  "useAnnotations": true,
+  "useAutoDispatch": true,
+  "generateUIWith": "ReactJS",
+  "generateUI": true
+}

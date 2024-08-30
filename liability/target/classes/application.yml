@@ -1,0 +1,28 @@
+# RabbitMQ broker
+rabbitmq:
+  exchange:
+    name: org.taxation.liability-exchange
+  queue:
+    name: org.taxation.liability-queue
+
+# Axon Server
+axonserver:
+  server:
+    # Define multiple contexts
+    context: LiabilityContext
+
+# Read Model
+projection:
+
+  token-store:
+    type: mongodb
+    url: "mongodb://localhost:27017"
+
+  repository:
+    type: mongo
+    database-name: "liability"
+
+
+spring:
+  main:
+    allow-bean-definition-overriding: true

@@ -1,0 +1,433 @@
+{
+  "context": {
+    "groupId": "ch.imposition",
+    "artifactId": "perception",
+    "artifactVersion": "1.0.0",
+    "packageName": "ch.imposition.perception"
+  },
+  "model": {
+    "persistenceSettings": {
+      "storageType": "JOURNAL",
+      "useCQRS": true,
+      "projections": "EVENT_BASED",
+      "database": "IN_MEMORY",
+      "commandModelDatabase": "POSTGRES",
+      "queryModelDatabase": "POSTGRES"
+    },
+    "aggregateSettings": [
+      {
+        "api": {
+          "rootPath": "/compte",
+          "routes": [
+            {
+              "path": "*",
+              "httpMethod": "POST",
+              "aggregateMethod": "OuvrirCompte",
+              "requireEntityLoad": false
+            }
+          ]
+        },
+        "aggregateName": "Compte",
+        "stateFields": [
+          {
+            "name": "id",
+            "type": "String"
+          },
+          {
+            "name": "idCreance",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "idPersonne",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "solde",
+            "type": "double",
+            "collectionType": ""
+          },
+          {
+            "name": "transaction",
+            "type": "double",
+            "collectionType": ""
+          },
+          {
+            "name": "annee",
+            "type": "int",
+            "collectionType": ""
+          },
+          {
+            "name": "isFerme",
+            "type": "boolean",
+            "collectionType": ""
+          }
+        ],
+        "methods": [
+          {
+            "name": "OuvrirCompte",
+            "parameters": [
+              {
+                "stateField": "idCreance",
+                "parameterName": "idCreance",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "idPersonne",
+                "parameterName": "idPersonne",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "annee",
+                "parameterName": "annee",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": true,
+            "event": "CompteOuvert"
+          },
+          {
+            "name": "CrediterCompte",
+            "parameters": [
+              {
+                "stateField": "id",
+                "parameterName": "id",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "transaction",
+                "parameterName": "transaction",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": false,
+            "event": "CompteCredite"
+          },
+          {
+            "name": "DebiterCompte",
+            "parameters": [
+              {
+                "stateField": "id",
+                "parameterName": "id",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "transaction",
+                "parameterName": "transaction",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": false,
+            "event": "CompteDebite"
+          },
+          {
+            "name": "FermerCompte",
+            "parameters": [
+              {
+                "stateField": "id",
+                "parameterName": "id",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": false
+          }
+        ],
+        "events": [
+          {
+            "name": "CompteOuvert",
+            "fields": [
+              "id",
+              "idCreance",
+              "idPersonne",
+              "annee"
+            ]
+          },
+          {
+            "name": "CompteCredite",
+            "fields": [
+              "id",
+              "solde",
+              "transaction"
+            ]
+          },
+          {
+            "name": "CompteDebite",
+            "fields": [
+              "id",
+              "solde",
+              "transaction"
+            ]
+          },
+          {
+            "name": "CompteFerme",
+            "fields": [
+              "id",
+              "idCreance",
+              "idPersonne",
+              "solde",
+              "annee",
+              "isFerme"
+            ]
+          }
+        ],
+        "consumerExchange": {
+          "receivers": []
+        },
+        "producerExchange": {
+          "schemaGroup": "Imposition:perception:ch.impoisition.perception",
+          "outgoingEvents": [
+            "CompteOuvert",
+            "CompteCredite",
+            "CompteDebite",
+            "CompteFerme"
+          ]
+        }
+      },
+      {
+        "api": {
+          "rootPath": "/creance",
+          "routes": [
+            {
+              "path": "*",
+              "httpMethod": "POST",
+              "aggregateMethod": "CreerCreance",
+              "requireEntityLoad": false
+            }
+          ]
+        },
+        "aggregateName": "Creance",
+        "stateFields": [
+          {
+            "name": "id",
+            "type": "String"
+          },
+          {
+            "name": "idPersonne",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "idAssujettissement",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "annee",
+            "type": "int",
+            "collectionType": ""
+          },
+          {
+            "name": "isEmise",
+            "type": "boolean",
+            "collectionType": ""
+          },
+          {
+            "name": "isSoldee",
+            "type": "boolean",
+            "collectionType": ""
+          },
+          {
+            "name": "montant",
+            "type": "double",
+            "collectionType": ""
+          },
+          {
+            "name": "idCompte",
+            "type": "String",
+            "collectionType": ""
+          }
+        ],
+        "methods": [
+          {
+            "name": "CreerCreance",
+            "parameters": [
+              {
+                "stateField": "idPersonne",
+                "parameterName": "idPersonne",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "idAssujettissement",
+                "parameterName": "idAssujettissement",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "annee",
+                "parameterName": "annee",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": true,
+            "event": "CreanceCree"
+          },
+          {
+            "name": "EmettreCreance",
+            "parameters": [
+              {
+                "stateField": "id",
+                "parameterName": "id",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "montant",
+                "parameterName": "montant",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": false,
+            "event": "CreanceEmise"
+          },
+          {
+            "name": "SolderCreance",
+            "parameters": [
+              {
+                "stateField": "id",
+                "parameterName": "id",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": false,
+            "event": "CreanceSoldee"
+          },
+          {
+            "name": "AssocierCompte",
+            "parameters": [
+              {
+                "stateField": "id",
+                "parameterName": "id",
+                "multiplicity": ""
+              },
+              {
+                "stateField": "idCompte",
+                "parameterName": "idCompte",
+                "multiplicity": ""
+              }
+            ],
+            "useFactory": false,
+            "event": "CompteAssocie"
+          }
+        ],
+        "events": [
+          {
+            "name": "CreanceCree",
+            "fields": [
+              "id",
+              "idPersonne",
+              "idAssujettissement",
+              "annee"
+            ]
+          },
+          {
+            "name": "CreanceEmise",
+            "fields": [
+              "id",
+              "annee",
+              "isEmise",
+              "montant"
+            ]
+          },
+          {
+            "name": "CreanceSoldee",
+            "fields": [
+              "id",
+              "idPersonne",
+              "annee",
+              "isSoldee",
+              "montant"
+            ]
+          },
+          {
+            "name": "CompteAssocie",
+            "fields": [
+              "id",
+              "idCompte"
+            ]
+          }
+        ],
+        "consumerExchange": {
+          "receivers": [
+            {
+              "schema": "Imposition:assujettissement:ch.imposition.assujettissement:AssujettissementValide:1.0.0",
+              "aggregateMethod": "CreerCreance"
+            },
+            {
+              "schema": "Imposition:taxation:ch.imposition.taxation:TaxationCalculee:1.0.0",
+              "aggregateMethod": "EmettreCreance"
+            }
+          ]
+        },
+        "producerExchange": {
+          "schemaGroup": "Imposition:perception:ch.impoisition.perception",
+          "outgoingEvents": [
+            "CreanceCree",
+            "CreanceEmise",
+            "CreanceSoldee"
+          ]
+        }
+      }
+    ],
+    "valueObjectSettings": [
+      {
+        "name": "NomComplet",
+        "fields": [
+          {
+            "name": "prenom",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "nom",
+            "type": "String",
+            "collectionType": ""
+          }
+        ]
+      },
+      {
+        "name": "Adresse",
+        "fields": [
+          {
+            "name": "Rue",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "Numero",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "Ville",
+            "type": "String",
+            "collectionType": ""
+          },
+          {
+            "name": "CodePostal",
+            "type": "int",
+            "collectionType": ""
+          }
+        ]
+      }
+    ]
+  },
+  "deployment": {
+    "type": "NONE",
+    "dockerImage": "",
+    "kubernetesImage": "",
+    "kubernetesPod": "",
+    "clusterTotalNodes": 3,
+    "clusterPort": 50011,
+    "producerExchangePort": 19763,
+    "httpServerPort": 8082,
+    "pullSchemas": false
+  },
+  "schemata": {
+    "host": "localhost",
+    "port": 9019
+  },
+  "projectDirectory": "/designer/VLINGO-XOOM/ch.imposition/perception1",
+  "useAnnotations": true,
+  "useAutoDispatch": true,
+  "generateUIWith": "ReactJS",
+  "generateUI": true
+}

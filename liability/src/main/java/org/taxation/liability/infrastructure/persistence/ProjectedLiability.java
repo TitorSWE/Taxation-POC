@@ -2,8 +2,9 @@ package org.taxation.liability.infrastructure.persistence;
 
 import org.taxation.liability.model.valueObjects.Type;
 import org.taxation.liability.model.valueObjects.Year;
+import org.taxation.tools.Persistence.ProjectedEntity;
 
-public class ProjectedLiability implements ProjectedEntity{
+public class ProjectedLiability implements ProjectedEntity {
 
     private String id;
     private String personId;

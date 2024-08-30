@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.taxation.liability.model.events.LiabilityCreated;
 import org.taxation.liability.model.events.LiabilityTypeDefined;
 import org.taxation.liability.model.events.PersonDeclared;
+import org.taxation.tools.Persistence.IRepository;
 
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class PersonProjectionService {
         String personId = event.getPersonId();
         ProjectedPerson projectedPerson = repository.findById(personId);
         ProjectedLiability updatedLiability = projectedPerson.getLiability();
-        updatedLiability.setType(event.getType());
+        updatedLiability.setType(event.getLiabilityType());
         projectedPerson.setLiability(updatedLiability);
         repository.save(projectedPerson);
     }

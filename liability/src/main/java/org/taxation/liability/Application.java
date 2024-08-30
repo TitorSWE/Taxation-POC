@@ -2,8 +2,10 @@ package org.taxation.liability;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"org.taxation.liability", "org.taxation.tools"})
 public class Application {
 
     public static void main(String[] args) {
