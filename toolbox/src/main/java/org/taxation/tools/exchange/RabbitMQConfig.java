@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package org.taxation.tools.exchange;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,3 +60,7 @@ public class RabbitMQConfig {
     }
 }
 
+=======
+package org.taxation.tools.exchange;public class RabbitMQConfig {
+}
+>>>>>>> 34f407bdf061ef716a6c180731a0f8926eb95942

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package org.taxation.tools;
 
 import org.axonframework.config.EventProcessingConfigurer;
@@ -14,3 +15,7 @@ class ProjectionConfig {
         config.registerTokenStore(configuration -> tokenStore);
     }
 }
+=======
+package org.taxation.tools;public class ProjectionConfig {
+}
+>>>>>>> 34f407bdf061ef716a6c180731a0f8926eb95942

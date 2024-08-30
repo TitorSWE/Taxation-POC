@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package org.taxation.tools;
 
 import com.mongodb.client.MongoClient;
@@ -31,3 +32,7 @@ class MongoDBTokenStore {
                 .build();
     }
 }
+=======
+package org.taxation.tools;public class MongoDBTokenStore {
+}
+>>>>>>> 34f407bdf061ef716a6c180731a0f8926eb95942

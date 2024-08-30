@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package org.taxation.tools.exchange;
 
 import org.axonframework.eventhandling.EventHandler;
@@ -29,4 +30,7 @@ public class EventPublisher {
         Message message = messageConverter.toMessage(event, properties);
         rabbitTemplate.send(fanoutExchange, message);
     }
+=======
+package org.taxation.tools.exchange;public class EventPublisher {
+>>>>>>> 34f407bdf061ef716a6c180731a0f8926eb95942
 }
